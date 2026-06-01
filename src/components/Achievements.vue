@@ -79,10 +79,10 @@ const achievementsData = ref([
     period: "2026",
   },
   {
-    title: "Sertifikasi Kompetensi BNSP — Software Development",
+    title: "Sertifikasi Kompetensi BNSP — Junior Web Developer",
     institution:
-      "Badan Nasional Sertifikasi Profesi (BNSP) Indonesia. Certified Professional Competency in core programming methodologies and software engineering practices.",
-    period: "2026",
+      "Badan Nasional Sertifikasi Profesi (BNSP) Indonesia. Certified professional competency in designing responsive interfaces, implementing database architectures, and engineering secure web application logic.",
+    period: "2025",
   },
 ]);
 </script>
