@@ -25,7 +25,7 @@ const projects = [
   },
   {
     title: "Smart Hospital Queue",
-    tags: ["Python", "FastAPI", "ML", "Flutter"],
+    tags: ["Python", "FastAPI", "ML", "React"],
     desc: "An intelligent hospital queue management system that integrates Machine Learning algorithms to provide real-time patient wait-time predictions.",
     github: "https://github.com/airinr/hospital_queue_prediction",
   },
