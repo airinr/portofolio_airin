@@ -2,7 +2,8 @@
 import Navbar from "./components/Navbar.vue";
 import Hero from "./components/Hero.vue";
 import ProjectCard from "./components/ProjectCard.vue";
-import Skills from "./components/Skills.vue"; // Sudah diimpor
+import Skills from "./components/Skills.vue";
+import Achievements from "./components/Achievements.vue"; // 1. Impor komponen Achievements
 import Footer from "./components/Footer.vue";
 import { onMounted, nextTick } from "vue";
 import AOS from "aos";
@@ -112,12 +113,13 @@ onMounted(async () => {
       </div>
     </section>
 
+    <Achievements />
+
     <Footer />
   </div>
 </template>
 
 <style>
-/* Menambahkan transisi halus untuk scroll antar section */
 html {
   scroll-behavior: smooth;
 }

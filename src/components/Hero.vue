@@ -24,26 +24,12 @@
     >
       <p>
         I’m <span class="text-black font-bold">Airin Ristiana</span>, a
-        developer and tech enthusiast currently in my 6th semester. I spend my
-        time at the intersection of
+        dedicated developer and tech enthusiast. I spend my time at the
+        intersection of
         <strong class="text-black font-semibold">Machine Learning</strong>,
         <strong class="text-black font-semibold">Mobile Development</strong>,
         and <strong class="text-black font-semibold">Web Development</strong>,
         focusing on creating smart tools that feel intuitive.
-      </p>
-
-      <p>
-        Securing a place in the
-        <span class="text-black font-semibold"
-          >Top 10 Teams at Samsung Innovation Campus 2025/2026</span
-        >
-        with my project
-        <span class="italic text-black font-medium border-b border-black/20"
-          >Calmisense</span
-        >, and being a
-        <span class="text-black font-semibold">top 40 coder</span> in national
-        competitions, my goal is to build technology that doesn't just work, but
-        actually matters.
       </p>
     </div>
 
