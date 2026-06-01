@@ -12,7 +12,7 @@ import "aos/dist/aos.css";
 const projects = [
   {
     title: "CalmiSense",
-    tags: ["IoT", "ML", "Flutter"],
+    tags: ["IoT", "ML", "React"],
     desc: "A wearable device for early panic detection in children with ASD, utilizing ESP32 and AI prediction.",
     status: "Top 10 Samsung Innovation Campus",
     github: "https://github.com/airinr/wearable_device_asd",
