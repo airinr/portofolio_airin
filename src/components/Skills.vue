@@ -1,13 +1,13 @@
 <template>
   <section
     id="expertise-showcase"
-    class="max-w-4xl mx-auto py-32 px-6 antialiased selection:bg-black selection:text-white"
+    class="max-w-4xl mx-auto pt-16 pb-16 px-6 antialiased selection:bg-accent selection:text-accent-ink"
   >
     <div class="flex items-center gap-6 mb-20" data-aos="fade-right">
-      <h2 class="text-[10px] font-black uppercase tracking-[0.4em] text-black">
+      <h2 class="text-[10px] font-black uppercase tracking-[0.4em] text-ink">
         What do I help?
       </h2>
-      <div class="h-[1px] flex-grow bg-black/10"></div>
+      <div class="h-[1px] flex-grow bg-line"></div>
     </div>
 
     <div
@@ -15,25 +15,25 @@
     >
       <div class="md:col-span-5 space-y-4" data-aos="fade-right">
         <button
-          v-for="(skill, index) in skillsData"
+          v-for="(skill, index) in content.skills"
           :key="index"
           @click="activeTabIndex = index"
           class="w-full text-left flex items-center gap-5 p-5 rounded-xl border transition-all duration-300 outline-none group"
           :class="
             activeTabIndex === index
-              ? 'border-black bg-black text-white shadow-[0_10px_30px_rgba(0,0,0,0.1)]'
-              : 'border-black/5 bg-white text-black hover:border-black/20 shadow-[0_4px_20px_rgba(0,0,0,0.02)]'
+              ? 'border-ink bg-accent text-accent-ink shadow-[0_10px_30px_rgba(0,0,0,0.1)]'
+              : 'border-line bg-surface text-ink hover:border-hover-line shadow-[0_4px_20px_rgba(0,0,0,0.02)]'
           "
         >
           <div
             class="flex items-center justify-center w-12 h-12 rounded-full shrink-0 transition-colors duration-300"
             :class="
               activeTabIndex === index
-                ? 'bg-white text-black'
-                : 'bg-black text-white'
+                ? 'bg-accent-ink text-accent'
+                : 'bg-accent text-accent-ink'
             "
           >
-            <component :is="skill.icon" class="w-5 h-5" />
+            <component :is="iconFor(skill.iconKey)" class="w-5 h-5" />
           </div>
 
           <div>
@@ -51,21 +51,21 @@
         data-aos="fade-up"
         :key="activeTabIndex"
       >
-        <h2 class="text-4xl font-bold tracking-tighter text-black mb-6">
-          {{ activeSkill.title }}
+        <h2 class="text-4xl font-bold tracking-tighter text-ink mb-6">
+          {{ activeSkill?.title }}
         </h2>
 
         <div
-          class="space-y-4 text-[15px] text-black/60 leading-relaxed font-light max-w-lg mb-8"
+          class="space-y-4 text-[15px] text-muted leading-relaxed font-light max-w-lg mb-8"
         >
-          <p>{{ activeSkill.description }}</p>
+          <p>{{ activeSkill?.description }}</p>
         </div>
 
         <div class="flex flex-wrap gap-2">
           <span
-            v-for="tech in activeSkill.techStack"
+            v-for="tech in activeSkill?.techStack || []"
             :key="tech"
-            class="text-xs font-mono px-3 py-1 rounded-md border border-black/10 bg-black/[0.02] text-black/70"
+            class="text-xs font-mono px-3 py-1 rounded-md border border-line bg-card-soft text-muted"
           >
             {{ tech }}
           </span>
@@ -76,9 +76,9 @@
 </template>
 
 <script setup>
-import { ref, computed, h } from "vue";
+import { computed, ref, h, watch } from "vue";
+import { useContent } from "../composables/useContent";
 
-// SVG Icons re-architected with h() render function for full Vite compatibility
 const SmartphoneIcon = {
   render() {
     return h(
@@ -184,40 +184,30 @@ const CpuIcon = {
   },
 };
 
+const iconMap = {
+  phone: SmartphoneIcon,
+  monitor: MonitorIcon,
+  brain: BrainIcon,
+  cpu: CpuIcon,
+};
+
+const content = useContent();
 const activeTabIndex = ref(0);
 
-const skillsData = ref([
-  {
-    title: "Mobile App Dev",
-    icon: SmartphoneIcon,
-    description:
-      "Focusing on crafting high-performance, cross-platform mobile applications. Experienced in designing clean, interactive application architectures deeply integrated with real-time databases and seamless cloud systems.",
-    techStack: ["Flutter", "Dart", "Firebase Auth", "Cloud Firestore"],
-  },
-  {
-    title: "Web Development",
-    icon: MonitorIcon,
-    description:
-      "Building modern, highly interactive, and responsive web interfaces. Scaled frontend components alongside optimized build utilities and custom web dashboards connected to rapid backend infrastructures.",
-    techStack: ["React.js", "Vite.js", "JavaScript", "Tailwind CSS"],
-  },
-  {
-    title: "Machine Learning",
-    icon: BrainIcon,
-    description:
-      "Implementing applied artificial intelligence solutions to deliver real-world impact. Focused on engineering data architectures using classification models and prediction logic to evaluate physiological or complex datasets.",
-    techStack: ["Python", "FastAPI"],
-  },
-  {
-    title: "IoT Engineering",
-    icon: CpuIcon,
-    description:
-      "Bridging the physical world with digital intelligence. Highly proficient in microcontrollers configuration, parsing real-time biometrics or motion data feeds, and controlling responsive physical mechanisms smoothly.",
-    techStack: ["ESP32", "ESP8266", "IoT Components"],
-  },
-]);
+const activeSkill = computed(() => content.value.skills[activeTabIndex.value]);
 
-const activeSkill = computed(() => skillsData.value[activeTabIndex.value]);
+watch(
+  () => content.value.skills.length,
+  (len) => {
+    if (activeTabIndex.value >= len) {
+      activeTabIndex.value = Math.max(0, len - 1);
+    }
+  },
+);
+
+function iconFor(key) {
+  return iconMap[key] || MonitorIcon;
+}
 </script>
 
 <style scoped>

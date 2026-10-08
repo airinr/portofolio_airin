@@ -1,50 +1,67 @@
 <template>
   <section
     id="achievements"
-    class="max-w-4xl mx-auto py-32 px-6 antialiased selection:bg-black selection:text-white"
+    class="max-w-4xl mx-auto pt-16 pb-16 px-6 antialiased selection:bg-accent selection:text-accent-ink"
   >
     <div class="flex items-center gap-6 mb-20" data-aos="fade-right">
-      <h2 class="text-[10px] font-black uppercase tracking-[0.4em] text-black">
+      <h2 class="text-[10px] font-black uppercase tracking-[0.4em] text-ink">
         Recognitions, Awards & Certifications
       </h2>
-      <div class="h-[1px] flex-grow bg-black/10"></div>
+      <div class="h-[1px] flex-grow bg-line"></div>
     </div>
 
     <div class="space-y-0">
       <div
-        v-for="(award, index) in achievementsData"
+        v-for="(award, index) in sortedAchievements"
         :key="index"
-        class="group relative border-b border-black/5 py-10 transition-all duration-500 first:pt-0 last:border-none"
+        class="group relative border-b border-line py-10 transition-all duration-500 first:pt-0 last:border-none"
         data-aos="fade-up"
         :data-aos-delay="index * 100"
       >
         <div
-          class="absolute inset-x-0 inset-y-0 -mx-4 bg-black/[0.01] opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl pointer-events-none"
+          class="absolute inset-x-0 inset-y-0 -mx-4 bg-card-soft opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl pointer-events-none"
         ></div>
 
         <div
           class="relative grid grid-cols-1 md:grid-cols-12 gap-6 items-start"
         >
           <div
-            class="md:col-span-2 text-xs font-mono text-black/30 group-hover:text-black transition-colors duration-500 md:pt-1"
+            class="md:col-span-2 text-xs font-mono text-faint group-hover:text-ink transition-colors duration-500 md:pt-1"
           >
             0{{ index + 1 }}/
           </div>
 
           <div class="md:col-span-7">
-            <h3
-              class="text-xl font-bold text-black tracking-tight mb-2 group-hover:translate-x-1 transition-transform duration-500"
-            >
-              {{ award.title }}
-            </h3>
-            <p class="text-[14px] text-black/50 font-light leading-relaxed">
-              {{ award.institution }}
-            </p>
+            <div class="flex items-start gap-4">
+              <button
+                v-if="award.image"
+                type="button"
+                @click="openLightbox(award)"
+                class="shrink-0 rounded-lg overflow-hidden border border-line focus:outline-none focus-visible:ring-2 focus-visible:ring-ink cursor-zoom-in"
+                :aria-label="'Lihat sertifikat ' + award.title"
+              >
+                <img
+                  :src="award.image"
+                  :alt="award.title"
+                  class="w-16 h-16 object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </button>
+              <div class="min-w-0">
+                <h3
+                  class="text-xl font-bold text-ink tracking-tight mb-2 group-hover:translate-x-1 transition-transform duration-500"
+                >
+                  {{ award.title }}
+                </h3>
+                <p class="text-[14px] text-muted font-light leading-relaxed">
+                  {{ award.institution }}
+                </p>
+              </div>
+            </div>
           </div>
 
           <div class="md:col-span-3 md:text-right">
             <span
-              class="inline-block text-xs font-mono text-black/40 border border-black/10 px-3 py-1 rounded-full bg-white"
+              class="inline-block text-xs font-mono text-faint border border-line px-3 py-1 rounded-full bg-surface"
             >
               {{ award.period }}
             </span>
@@ -52,39 +69,96 @@
         </div>
       </div>
     </div>
+
+    <Teleport to="body">
+      <div
+        v-if="lightbox"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+        @click.self="closeLightbox"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="lightbox.title"
+      >
+        <button
+          type="button"
+          class="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+          aria-label="Tutup"
+          @click="closeLightbox"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+
+        <figure class="max-w-4xl w-full flex flex-col items-center gap-4">
+          <img
+            :src="lightbox.image"
+            :alt="lightbox.title"
+            class="max-h-[80vh] w-auto max-w-full rounded-xl object-contain shadow-2xl"
+          />
+          <figcaption class="text-center text-white/80 text-sm px-4">
+            <span class="font-bold text-white">{{ lightbox.title }}</span>
+            <span v-if="lightbox.period" class="text-white/50">
+              · {{ lightbox.period }}
+            </span>
+          </figcaption>
+        </figure>
+      </div>
+    </Teleport>
   </section>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { useContent, sortAchievements } from "../composables/useContent";
 
-// Data prestasi dan sertifikasi nasional/global Anda
-const achievementsData = ref([
-  {
-    title: "Top 10 Finalist — Samsung Innovation Campus",
-    institution:
-      "National innovation program. Developed CalmiSense, an AI-integrated wearable device built with an ESP32 for early physiological and biometrics monitoring.",
-    period: "2025 - 2026",
-  },
-  {
-    title: "Top 40 Coder — National Coding Competition",
-    institution:
-      "Recognized among the top 40 software engineering and competitive programming talents at the national level.",
-    period: "2025",
-  },
-  {
-    title: "Cisco Certified Network Associate (CCNA)",
-    institution:
-      "Cisco Global Certification. Validating comprehensive knowledge in network fundamentals, IP connectivity, security fundamentals, and automation.",
-    period: "2026",
-  },
-  {
-    title: "Sertifikasi Kompetensi BNSP — Junior Web Developer",
-    institution:
-      "Badan Nasional Sertifikasi Profesi (BNSP) Indonesia. Certified professional competency in designing responsive interfaces, implementing database architectures, and engineering secure web application logic.",
-    period: "2025",
-  },
-]);
+const content = useContent();
+const sortedAchievements = computed(() =>
+  sortAchievements(content.value.achievements),
+);
+
+const lightbox = ref(null);
+
+watch(lightbox, (val) => {
+  document.body.style.overflow = val ? "hidden" : "";
+});
+
+function openLightbox(award) {
+  if (!award.image) return;
+  lightbox.value = {
+    image: award.image,
+    title: award.title,
+    period: award.period,
+  };
+}
+
+function closeLightbox() {
+  lightbox.value = null;
+}
+
+function onKeydown(e) {
+  if (e.key === "Escape") closeLightbox();
+}
+
+onMounted(() => {
+  window.addEventListener("keydown", onKeydown);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("keydown", onKeydown);
+  document.body.style.overflow = "";
+});
 </script>
 
 <style scoped>

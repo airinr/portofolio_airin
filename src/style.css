@@ -1,2 +1,63 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
+
+:root {
+  --surface: #ffffff;
+  --bg: #ffffff;
+  --text: #000000;
+  --muted: rgb(0 0 0 / 0.6);
+  --faint: rgb(0 0 0 / 0.4);
+  --line: rgb(0 0 0 / 0.1);
+  --accent: #000000;
+  --accent-ink: #ffffff;
+  --field: #f8fafc;
+  --field-border: rgb(0 0 0 / 0.1);
+  --hover-line: rgb(0 0 0 / 0.4);
+  --card-soft: rgb(0 0 0 / 0.01);
+  color-scheme: light;
+}
+
+html.dark {
+  --surface: #0a0a0a;
+  --bg: #0a0a0a;
+  --text: #f5f5f5;
+  --muted: rgb(255 255 255 / 0.65);
+  --faint: rgb(255 255 255 / 0.45);
+  --line: rgb(255 255 255 / 0.12);
+  --accent: #f5f5f5;
+  --accent-ink: #0a0a0a;
+  --field: #171717;
+  --field-border: rgb(255 255 255 / 0.12);
+  --hover-line: rgb(255 255 255 / 0.45);
+  --card-soft: rgb(255 255 255 / 0.03);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-bg: var(--bg);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-field: var(--field);
+  --color-field-border: var(--field-border);
+  --color-hover-line: var(--hover-line);
+  --color-card-soft: var(--card-soft);
+}
+
+html,
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+body {
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
