@@ -1,7 +1,7 @@
 {
   "hero": {
     "name": "Airin Ristiana",
-    "photo": "/src/assets/airin.jpg?t=1791356298571",
+    "photo": "/airin.jpg",
     "description": "I'm **Airin Ristiana**, a dedicated developer and tech enthusiast. I spend my time at the intersection of **Machine Learning**, **Mobile Development**, and **Web Development**, focusing on creating smart tools that feel intuitive."
   },
   "skills": [
